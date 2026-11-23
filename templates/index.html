@@ -1,0 +1,905 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Career Path AI</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#07111f;color:#f1f5f9;min-height:100vh}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.auth-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:25px;background:radial-gradient(circle at 15% 20%,#123b46 0%,transparent 35%),radial-gradient(circle at 85% 80%,#172c52 0%,transparent 35%),#07111f}
+.auth-card{width:100%;max-width:430px;padding:42px;background:#101d30;border:1px solid #263d55;border-radius:20px}
+.logo,.brand{color:#2dd4bf;font-size:25px;font-weight:bold;margin-bottom:12px}
+.auth-card h1{font-size:27px;margin-bottom:10px}
+.subtitle,.welcome p{color:#94a3b8;line-height:1.6;margin-bottom:25px}
+.field{margin-bottom:18px}
+.field label{display:block;margin-bottom:8px;color:#cbd5e1;font-size:14px}
+.field input,.text-input{width:100%;padding:14px;background:#07111f;border:1px solid #33465d;border-radius:9px;color:white;outline:none}
+.field input:focus,.text-input:focus{border-color:#2dd4bf}
+.primary-btn{width:100%;padding:14px;background:#2dd4bf;border:none;border-radius:9px;color:#07111f;font-weight:bold;margin-top:8px}
+.primary-btn:hover{background:#5eead4}
+.primary-btn:disabled{opacity:.6;cursor:wait}
+.auth-switch{text-align:center;margin-top:23px;color:#94a3b8;font-size:14px}
+.auth-switch button{background:none;border:none;color:#2dd4bf;font-weight:bold;margin-left:5px}
+.message,.assessment-message{margin-top:15px;font-size:14px;line-height:1.5;color:#fca5a5}
+.dashboard{min-height:100vh}
+.topbar{min-height:75px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:15px 5%;background:#101d30;border-bottom:1px solid #263d55}
+.brand{font-size:22px;margin:0}
+.user-area{display:flex;align-items:center;gap:15px;color:#cbd5e1}
+.logout-btn{padding:9px 16px;border:1px solid #40546c;border-radius:8px;background:transparent;color:white}
+.dashboard-layout{display:flex;min-height:calc(100vh - 75px)}
+.sidebar{width:245px;flex-shrink:0;background:#101d30;border-right:1px solid #263d55;padding:28px 15px}
+.sidebar-heading{color:#64748b;font-size:11px;letter-spacing:1.5px;margin:0 12px 18px}
+.nav-btn{display:block;width:100%;text-align:left;padding:13px 14px;margin-bottom:7px;border:none;border-radius:8px;background:transparent;color:#cbd5e1;font-size:14px}
+.nav-btn:hover,.nav-btn.active{background:#173b45;color:#2dd4bf}
+.main-content{flex:1;min-width:0;padding:38px}
+.welcome h1{font-size:29px;margin-bottom:10px}
+.section{margin-top:30px}
+.section-title{font-size:19px;margin-bottom:17px}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.feature-card,.info-panel,.discovery-panel{background:#101d30;border:1px solid #263d55;border-radius:13px;padding:22px}
+.feature-card{min-height:155px}
+.feature-icon{font-size:25px;margin-bottom:15px}
+.feature-card h3{margin-bottom:9px;font-size:16px}
+.feature-card p,.muted{color:#94a3b8;font-size:13px;line-height:1.6}
+.status{display:inline-block;margin-top:15px;color:#2dd4bf;font-size:12px}
+.info-panel{margin-top:25px}
+.info-panel p{color:#94a3b8;line-height:1.7;margin-top:10px}
+.discovery-panel{margin-top:25px}
+.discovery-intro{color:#94a3b8;line-height:1.7;margin:12px 0 22px}
+.question-card,.result-card,.career-card{background:#0b1728;border:1px solid #263d55;border-radius:12px;padding:20px;margin-bottom:18px}
+.question-card h3{font-size:16px;margin-bottom:8px}
+.question-card p{font-size:13px;color:#94a3b8;margin-bottom:16px}
+.options-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.option-label{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid #33465d;border-radius:8px;color:#cbd5e1;cursor:pointer;font-size:14px}
+.option-label:has(input:checked){border-color:#2dd4bf;background:#173b45;color:#5eead4}
+.option-label input{accent-color:#2dd4bf}
+.results-list{display:grid;gap:15px;margin-top:22px}
+.result-heading{display:flex;justify-content:space-between;gap:12px;margin-bottom:12px}
+.result-heading span{color:#2dd4bf;font-size:14px;font-weight:bold}
+.score-track{height:9px;background:#263d55;border-radius:20px;overflow:hidden}
+.score-fill{height:100%;background:linear-gradient(90deg,#2dd4bf,#60a5fa);border-radius:20px}
+.secondary-btn{padding:11px 18px;background:transparent;border:1px solid #2dd4bf;border-radius:8px;color:#2dd4bf;margin-top:15px}
+.secondary-btn:hover{background:#173b45}
+.note-text{font-size:12px;color:#94a3b8;line-height:1.6;margin-top:18px}
+.tag{display:inline-block;padding:6px 10px;border-radius:20px;background:#173b45;color:#5eead4;font-size:12px;margin:5px 5px 5px 0}
+.career-card h3{margin-bottom:8px}
+.career-card p{color:#94a3b8;font-size:13px;line-height:1.6;margin:7px 0}
+.career-card ul{margin:10px 0 0 18px;color:#cbd5e1;font-size:13px;line-height:1.8}
+.feature-section{margin-top:25px}
+.job-link{display:inline-block;margin-top:12px;color:#2dd4bf;text-decoration:none}
+.job-link:hover{text-decoration:underline}
+textarea.text-input{min-height:180px;resize:vertical;line-height:1.6}
+.resume-upload-box{border:1px dashed #426078;background:#0b1728;border-radius:12px;padding:22px;margin-top:18px}
+.resume-upload-box input[type=file]{padding:12px;border:1px solid #33465d;border-radius:8px;width:100%;background:#07111f;color:#cbd5e1}
+.resume-upload-box select{margin-top:8px}
+.file-hint{font-size:12px;color:#94a3b8;margin-top:9px;line-height:1.5}
+.resume-score-panel{display:grid;grid-template-columns:160px 1fr;gap:22px;align-items:center;background:#0b1728;border:1px solid #263d55;border-radius:13px;padding:22px;margin-bottom:18px}
+.score-circle{width:135px;height:135px;border-radius:50%;border:8px solid #2dd4bf;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:auto}
+.score-circle strong{font-size:35px;color:#2dd4bf}
+.score-circle span{font-size:11px;color:#94a3b8}
+.resume-rating{font-size:20px;margin-bottom:9px}
+.resume-summary{color:#94a3b8;font-size:13px;line-height:1.7}
+.resume-report-card{background:#0b1728;border:1px solid #263d55;border-radius:12px;padding:20px;margin-bottom:15px}
+.resume-report-card h3{font-size:16px;margin-bottom:14px}
+.resume-report-card p{font-size:13px;color:#94a3b8;line-height:1.6;margin-top:9px}
+.report-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.report-item{padding:12px;background:#101d30;border:1px solid #263d55;border-radius:8px;font-size:13px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.report-good{color:#2dd4bf}
+.report-missing{color:#fbbf24}
+.report-list{padding-left:20px;color:#cbd5e1;font-size:13px;line-height:1.8}
+.report-list li{margin-bottom:7px}
+.resume-error{color:#fca5a5;font-size:14px;line-height:1.6;margin-top:15px}
+.resume-success{color:#2dd4bf;font-size:13px;margin-top:12px}
+@media(max-width:850px){.dashboard-layout{display:block}.sidebar{width:100%;display:flex;gap:5px;overflow-x:auto;padding:12px}.sidebar-heading{display:none}.nav-btn{width:auto;white-space:nowrap;margin:0}.main-content{padding:25px 18px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:550px){.auth-card{padding:28px 22px}.cards,.options-grid,.report-grid{grid-template-columns:1fr}.topbar{padding:15px 18px}.brand{font-size:18px}.user-area{font-size:12px;gap:8px}.resume-score-panel{grid-template-columns:1fr;text-align:center}}
+</style>
+</head>
+<body>
+
+<div class="auth-page" id="authPage">
+<div class="auth-card">
+<div class="logo">CareerPath AI</div>
+<h1 id="authTitle">Welcome back</h1>
+<p class="subtitle" id="authSubtitle">Your skills. Your future. Your journey. Sign in to discover your career possibilities.</p>
+<form id="authForm">
+<div class="field hidden" id="nameField"><label for="name">Full Name</label><input type="text" id="name" placeholder="Enter your name"></div>
+<div class="field"><label for="email">Email Address</label><input type="email" id="email" placeholder="Enter your email" required></div>
+<div class="field"><label for="password">Password</label><input type="password" id="password" placeholder="Enter your password" required></div>
+<button type="submit" class="primary-btn" id="authButton">Login</button>
+<div class="message" id="message"></div>
+</form>
+<div class="auth-switch"><span id="switchText">Don't have an account?</span><button type="button" id="switchButton">Register</button></div>
+</div>
+</div>
+
+<div class="dashboard hidden" id="dashboard">
+<header class="topbar">
+<div class="brand">CareerPath AI</div>
+<div class="user-area"><span id="userPill">Welcome</span><button class="logout-btn" id="logoutButton">Logout</button></div>
+</header>
+<div class="dashboard-layout">
+<aside class="sidebar">
+<div class="sidebar-heading">YOUR WORKSPACE</div>
+<button class="nav-btn active" data-section="overview">⌂ &nbsp; Overview</button>
+<button class="nav-btn" data-section="discovery">✦ &nbsp; Discover Your Skills</button>
+<button class="nav-btn" data-section="careers">◎ &nbsp; Career Matches</button>
+<button class="nav-btn" data-section="gap">▤ &nbsp; Skill Gap Analysis</button>
+<button class="nav-btn" data-section="resume">▧ &nbsp; Resume Analysis</button>
+<button class="nav-btn" data-section="jobs">⌕ &nbsp; Find Jobs</button>
+</aside>
+
+<main class="main-content">
+<div class="welcome">
+<h1 id="welcomeName">Welcome!</h1>
+<p>Discover your strengths, explore career paths and plan your future.</p>
+</div>
+
+<div id="overviewSection">
+<div class="section">
+<h2 class="section-title">Your Career Workspace</h2>
+<div class="cards">
+<div class="feature-card"><div class="feature-icon">✦</div><h3>Discover Your Skills</h3><p>Identify your strengths through guided questions.</p><span class="status">Assessment available</span></div>
+<div class="feature-card"><div class="feature-icon">◎</div><h3>Career Recommendations</h3><p>Explore careers based on your interests and strengths.</p><span class="status">Personalised suggestions</span></div>
+<div class="feature-card"><div class="feature-icon">▤</div><h3>Skill Gap Analysis</h3><p>Understand skills to improve for your chosen career.</p><span class="status">Learning roadmap</span></div>
+<div class="feature-card"><div class="feature-icon">▧</div><h3>Resume Analysis</h3><p>Check your resume for relevant skills and keywords.</p><span class="status">Resume checker</span></div>
+<div class="feature-card"><div class="feature-icon">⌕</div><h3>Find Available Jobs</h3><p>Search external job platforms for opportunities.</p><span class="status">Job search</span></div>
+<div class="feature-card"><div class="feature-icon">↗</div><h3>Your Career Journey</h3><p>Turn your interests into a practical learning plan.</p><span class="status">Your next steps</span></div>
+</div>
+</div>
+<div class="info-panel"><h2>One platform. Your entire career journey.</h2><p>CareerPath AI helps you identify your strengths, understand your skill gaps, improve your resume and explore career opportunities.</p></div>
+</div>
+
+<div id="discoverySection" class="hidden">
+<div class="discovery-panel">
+<h2>Discover Your Hidden Skills ✦</h2>
+<p class="discovery-intro">Answer these six questions honestly. There are no right or wrong answers. Your responses help identify patterns in your interests and working style.</p>
+<form id="assessmentForm">
+<div class="question-card"><h3>1. What do you enjoy doing when you face a difficult problem?</h3><p>Choose what sounds most like you.</p><div class="options-grid">
+<label class="option-label"><input type="radio" name="problem_solving" value="logic" required> Solving logical problems</label>
+<label class="option-label"><input type="radio" name="problem_solving" value="puzzles"> Solving puzzles and challenges</label>
+<label class="option-label"><input type="radio" name="problem_solving" value="debugging"> Finding and fixing mistakes</label>
+<label class="option-label"><input type="radio" name="problem_solving" value="planning"> Planning a step-by-step solution</label>
+</div></div>
+<div class="question-card"><h3>2. Which activity sounds most interesting to you?</h3><p>Think about what you would enjoy most.</p><div class="options-grid">
+<label class="option-label"><input type="radio" name="creativity" value="design" required> Designing something</label>
+<label class="option-label"><input type="radio" name="creativity" value="ideas"> Coming up with new ideas</label>
+<label class="option-label"><input type="radio" name="creativity" value="writing"> Writing or expressing ideas</label>
+<label class="option-label"><input type="radio" name="creativity" value="building"> Building something new</label>
+</div></div>
+<div class="question-card"><h3>3. How do you prefer to work?</h3><p>Choose your comfortable working style.</p><div class="options-grid">
+<label class="option-label"><input type="radio" name="working_style" value="independent" required> Working independently</label>
+<label class="option-label"><input type="radio" name="working_style" value="team"> Working with a team</label>
+<label class="option-label"><input type="radio" name="working_style" value="leadership"> Leading a group</label>
+<label class="option-label"><input type="radio" name="working_style" value="organizing"> Organising tasks</label>
+</div></div>
+<div class="question-card"><h3>4. Which area interests you the most?</h3><p>Choose a subject you would like to explore.</p><div class="options-grid">
+<label class="option-label"><input type="radio" name="interests" value="technology" required> Technology and computers</label>
+<label class="option-label"><input type="radio" name="interests" value="data"> Numbers, data and patterns</label>
+<label class="option-label"><input type="radio" name="interests" value="people"> Understanding and helping people</label>
+<label class="option-label"><input type="radio" name="interests" value="business"> Business and entrepreneurship</label>
+</div></div>
+<div class="question-card"><h3>5. How do you learn something new?</h3><p>Choose what helps you understand a new topic.</p><div class="options-grid">
+<label class="option-label"><input type="radio" name="learning" value="practice" required> Practising it yourself</label>
+<label class="option-label"><input type="radio" name="learning" value="reading"> Reading and researching</label>
+<label class="option-label"><input type="radio" name="learning" value="experiments"> Trying experiments</label>
+<label class="option-label"><input type="radio" name="learning" value="discussion"> Discussing with others</label>
+</div></div>
+<div class="question-card"><h3>6. Which task would you choose for a college project?</h3><p>Choose the task you would enjoy most.</p><div class="options-grid">
+<label class="option-label"><input type="radio" name="activities" value="coding" required> Writing code</label>
+<label class="option-label"><input type="radio" name="activities" value="presenting"> Presenting ideas</label>
+<label class="option-label"><input type="radio" name="activities" value="analyzing"> Analysing information</label>
+<label class="option-label"><input type="radio" name="activities" value="creating"> Creating a design or product</label>
+</div></div>
+<button type="submit" class="primary-btn" id="submitAssessment">Discover My Skills</button>
+<div id="assessmentMessage" class="assessment-message"></div>
+</form>
+<div id="resultsPanel" class="hidden">
+<h2>Your Skill Discovery Results</h2>
+<p class="discovery-intro">These scores show patterns suggested by your answers.</p>
+<div id="resultsList" class="results-list"></div>
+<p class="note-text">These are indicative questionnaire scores, not scientifically validated aptitude scores.</p>
+<button type="button" class="secondary-btn" id="retakeButton">Retake Assessment</button>
+</div>
+</div>
+</div>
+
+<div id="careersSection" class="feature-section hidden">
+<h2 class="section-title">Your Career Matches</h2>
+<p class="muted">Career suggestions are generated from your skill discovery answers.</p>
+<div id="careerResults" class="results-list"></div>
+</div>
+
+<div id="gapSection" class="feature-section hidden">
+<h2 class="section-title">Your Skill Gap Analysis</h2>
+<p class="muted">Choose a career to view important skills you can work towards.</p>
+<div class="field" style="max-width:420px;margin-top:20px"><label for="targetCareer">Target career</label><select id="targetCareer" class="text-input"><option value="software">Software Developer</option><option value="data">Data Analyst</option><option value="ml">Machine Learning Engineer</option><option value="ui">UI/UX Designer</option><option value="business">Business Analyst</option></select></div>
+<button class="secondary-btn" id="analyseGapButton">Analyse Skill Gaps</button>
+<div id="gapResults" class="results-list"></div>
+</div>
+
+<div id="resumeSection" class="feature-section hidden">
+<h2 class="section-title">Resume Analysis</h2>
+<p class="muted">Get insights into your resume, identify listed skills and discover areas you could improve.</p>
+<div class="info-panel">
+<h3>Upload Your Resume</h3>
+<p>Upload your resume in PDF or TXT format. Choose a target career to receive more relevant skill recommendations.</p>
+<div class="resume-upload-box">
+<div class="field">
+<label for="resumeFile">Choose your resume</label>
+<input type="file" id="resumeFile" accept=".pdf,.txt,application/pdf,text/plain">
+<p class="file-hint">Supported formats: PDF and TXT. Maximum file size: 5 MB.</p>
+</div>
+<div class="field">
+<label for="resumeTargetRole">Target career</label>
+<select id="resumeTargetRole" class="text-input">
+<option value="Software Developer">Software Developer</option>
+<option value="Data Analyst">Data Analyst</option>
+<option value="Machine Learning Engineer">Machine Learning Engineer</option>
+<option value="UI/UX Designer">UI/UX Designer</option>
+<option value="Business Analyst">Business Analyst</option>
+</select>
+</div>
+<button class="primary-btn" id="analyseResumeButton">Analyse My Resume</button>
+<div id="resumeMessage" class="resume-error"></div>
+</div>
+</div>
+<div id="resumeResults" class="results-list"></div>
+<p class="note-text">Your resume is processed by the backend for analysis and is not permanently saved by this feature. The score is an indicative, rule-based assessment, not a professional ATS score or a hiring decision. Only add suggested skills if they genuinely reflect your abilities.</p>
+</div>
+
+<div id="jobsSection" class="feature-section hidden">
+<h2 class="section-title">Find Job Opportunities</h2>
+<div class="info-panel">
+<p>Search for current openings on established job platforms. These links open external search results; CareerPath AI does not currently fetch or verify live job listings itself.</p>
+<div class="field" style="margin-top:20px"><label for="jobRole">Job role</label><input id="jobRole" class="text-input" placeholder="e.g. Python Developer"></div>
+<div class="field"><label for="jobLocation">Preferred location</label><input id="jobLocation" class="text-input" placeholder="e.g. Delhi, Remote"></div>
+<button class="primary-btn" id="searchJobsButton">Search Jobs</button>
+<div id="jobLinks" class="results-list"></div>
+</div>
+</div>
+</main>
+</div>
+</div>
+
+<script>
+"use strict";
+
+let isRegistering = false;
+let currentUser = null;
+let latestResults = [];
+
+const $ = id => document.getElementById(id);
+const authPage = $("authPage");
+const dashboard = $("dashboard");
+const authForm = $("authForm");
+const message = $("message");
+
+function showMessage(text, error = true) {
+    message.textContent = text;
+    message.style.color = error ? "#fca5a5" : "#2dd4bf";
+}
+
+/* IMPORTANT: Safely read JSON responses.
+   This prevents "Unexpected token '<'" when the server returns HTML. */
+async function readApiResponse(response) {
+    const rawText = await response.text();
+    let data;
+
+    try {
+        data = JSON.parse(rawText);
+    } catch (error) {
+        console.error("The server returned a non-JSON response:", rawText);
+        throw new Error(
+            "The server returned an HTML/error page instead of JSON (HTTP " +
+            response.status + "). Check that you opened http://127.0.0.1:5000/ and that Flask is running."
+        );
+    }
+
+    if (!response.ok || data.success === false) {
+        throw new Error(data.message || "Request failed. Please try again.");
+    }
+
+    return data;
+}
+
+function showDashboard(user) {
+    currentUser = user;
+    authPage.classList.add("hidden");
+    dashboard.classList.remove("hidden");
+    $("userPill").textContent = user.name;
+    $("welcomeName").textContent = "Welcome, " + user.name + "!";
+    showSection("overview");
+}
+
+function showLogin() {
+    dashboard.classList.add("hidden");
+    authPage.classList.remove("hidden");
+}
+
+$("switchButton").addEventListener("click", () => {
+    isRegistering = !isRegistering;
+    $("nameField").classList.toggle("hidden", !isRegistering);
+    $("authTitle").textContent = isRegistering ? "Create your account" : "Welcome back";
+    $("authSubtitle").textContent = isRegistering
+        ? "Start discovering your skills and career possibilities."
+        : "Your skills. Your future. Your journey. Sign in to continue.";
+    $("authButton").textContent = isRegistering ? "Create Account" : "Login";
+    $("switchText").textContent = isRegistering
+        ? "Already have an account?" : "Don't have an account?";
+    $("switchButton").textContent = isRegistering ? "Login" : "Register";
+    message.textContent = "";
+});
+
+authForm.addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const name = $("name").value.trim();
+    const email = $("email").value.trim();
+    const password = $("password").value;
+
+    if (isRegistering && !name) {
+        showMessage("Please enter your name.");
+        return;
+    }
+
+    const button = $("authButton");
+    button.disabled = true;
+    button.textContent = "Please wait...";
+
+    try {
+        const response = await fetch(isRegistering ? "/api/register" : "/api/login", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            credentials: "same-origin",
+            body: JSON.stringify({name, email, password})
+        });
+
+        const data = await readApiResponse(response);
+        authForm.reset();
+        showDashboard(data.user);
+
+    } catch (error) {
+        showMessage(error.message || "Cannot connect to the server.");
+    } finally {
+        button.disabled = false;
+        button.textContent = isRegistering ? "Create Account" : "Login";
+    }
+});
+
+$("logoutButton").addEventListener("click", async () => {
+    try {
+        const response = await fetch("/api/logout", {
+            method: "POST",
+            credentials: "same-origin"
+        });
+        await readApiResponse(response);
+        currentUser = null;
+        latestResults = [];
+        showLogin();
+        authForm.reset();
+        message.textContent = "";
+    } catch (error) {
+        alert(error.message || "Unable to log out.");
+    }
+});
+
+function showSection(section) {
+    document.querySelectorAll(".nav-btn").forEach(button => {
+        button.classList.toggle("active", button.dataset.section === section);
+    });
+
+    ["overview", "discovery", "careers", "gap", "resume", "jobs"].forEach(name => {
+        $(name + "Section").classList.add("hidden");
+    });
+
+    $(section + "Section").classList.remove("hidden");
+
+    if (section === "discovery") loadSkillResults();
+    if (section === "careers") renderCareers();
+    if (section === "gap") renderGap();
+}
+
+document.querySelectorAll(".nav-btn").forEach(button => {
+    button.addEventListener("click", () => showSection(button.dataset.section));
+});
+
+/* SKILL DISCOVERY */
+
+async function loadSkillResults() {
+    $("assessmentMessage").textContent = "Loading your assessment...";
+
+    try {
+        const response = await fetch("/api/skill-discovery", {
+            credentials: "same-origin"
+        });
+        const data = await readApiResponse(response);
+
+        if (data.completed && Array.isArray(data.results) && data.results.length) {
+            latestResults = data.results;
+            renderSkillResults(latestResults);
+            $("assessmentForm").classList.add("hidden");
+            $("resultsPanel").classList.remove("hidden");
+        } else {
+            latestResults = [];
+            $("assessmentForm").classList.remove("hidden");
+            $("resultsPanel").classList.add("hidden");
+        }
+        $("assessmentMessage").textContent = "";
+    } catch (error) {
+        $("assessmentMessage").textContent = error.message;
+    }
+}
+
+function renderSkillResults(results) {
+    const list = $("resultsList");
+    list.replaceChildren();
+
+    results.forEach(result => {
+        const scoreValue = Math.max(0, Math.min(100, Number(result.score) || 0));
+        const card = document.createElement("div");
+        card.className = "result-card";
+
+        const heading = document.createElement("div");
+        heading.className = "result-heading";
+
+        const name = document.createElement("strong");
+        name.textContent = result.skill;
+
+        const score = document.createElement("span");
+        score.textContent = Math.round(scoreValue) + " points";
+
+        const track = document.createElement("div");
+        track.className = "score-track";
+
+        const fill = document.createElement("div");
+        fill.className = "score-fill";
+        fill.style.width = scoreValue + "%";
+
+        heading.append(name, score);
+        track.append(fill);
+        card.append(heading, track);
+        list.append(card);
+    });
+}
+
+$("assessmentForm").addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    const categories = [
+        "problem_solving", "creativity", "working_style",
+        "interests", "learning", "activities"
+    ];
+    const answers = {};
+
+    for (const category of categories) {
+        const value = formData.get(category);
+        if (!value) {
+            $("assessmentMessage").textContent = "Please answer all six questions.";
+            return;
+        }
+        answers[category] = value;
+    }
+
+    const button = $("submitAssessment");
+    button.disabled = true;
+    button.textContent = "Analysing...";
+    $("assessmentMessage").textContent = "";
+
+    try {
+        const response = await fetch("/api/skill-discovery", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            credentials: "same-origin",
+            body: JSON.stringify({answers})
+        });
+
+        const data = await readApiResponse(response);
+        latestResults = data.results || [];
+        renderSkillResults(latestResults);
+        $("assessmentForm").classList.add("hidden");
+        $("resultsPanel").classList.remove("hidden");
+
+    } catch (error) {
+        $("assessmentMessage").textContent = error.message;
+    } finally {
+        button.disabled = false;
+        button.textContent = "Discover My Skills";
+    }
+});
+
+$("retakeButton").addEventListener("click", () => {
+    $("assessmentForm").reset();
+    $("assessmentForm").classList.remove("hidden");
+    $("resultsPanel").classList.add("hidden");
+    $("assessmentMessage").textContent = "";
+});
+
+/* CAREER MATCHES */
+
+function resultText() {
+    return latestResults.map(r =>
+        (r.skill || "") + " " + (Number(r.score) || 0)
+    ).join(" ").toLowerCase();
+}
+
+function renderCareers() {
+    const container = $("careerResults");
+    container.replaceChildren();
+
+    if (!latestResults.length) {
+        const panel = document.createElement("div");
+        panel.className = "info-panel";
+        const p = document.createElement("p");
+        p.textContent = "Complete the Discover Your Skills assessment first to receive career suggestions.";
+        panel.append(p);
+        container.append(panel);
+        return;
+    }
+
+    const text = resultText();
+
+    const careers = [
+        {title:"Software Developer",desc:"Build applications, websites and software solutions.",skills:["Programming","Data Structures","Problem Solving","Git"],match:/problem|logic|technology|coding|debug|analytical/.test(text)},
+        {title:"Data Analyst",desc:"Explore datasets, identify patterns and communicate insights.",skills:["Python","SQL","Statistics","Data Visualisation"],match:/data|analyt|number|pattern|logic/.test(text)},
+        {title:"Machine Learning Engineer",desc:"Develop intelligent systems using data and machine learning.",skills:["Python","Statistics","Machine Learning","Linear Algebra"],match:/data|technology|logic|analyt|experiment/.test(text)},
+        {title:"UI/UX Designer",desc:"Design useful and intuitive digital experiences.",skills:["Figma","Wireframing","User Research","Prototyping"],match:/creativ|design|people|writing|ideas/.test(text)},
+        {title:"Business Analyst",desc:"Understand business problems and translate them into solutions.",skills:["Communication","SQL","Excel","Analytical Thinking"],match:/business|people|organ|present|analyt/.test(text)}
+    ];
+
+    careers.sort((a, b) => Number(b.match) - Number(a.match));
+
+    careers.forEach((career, index) => {
+        const card = document.createElement("div");
+        card.className = "career-card";
+
+        const heading = document.createElement("h3");
+        heading.textContent = career.title;
+
+        const desc = document.createElement("p");
+        desc.textContent = career.desc;
+
+        const match = document.createElement("span");
+        match.className = "tag";
+        match.textContent = index === 0 ? "Suggested career" : "Explore this career";
+
+        const label = document.createElement("p");
+        label.textContent = "Skills to develop:";
+
+        const ul = document.createElement("ul");
+        career.skills.forEach(skill => {
+            const li = document.createElement("li");
+            li.textContent = skill;
+            ul.append(li);
+        });
+
+        card.append(heading, desc, match, label, ul);
+        container.append(card);
+    });
+}
+
+/* SKILL GAP ANALYSIS */
+
+const careerSkills = {
+    software:["Programming","Data Structures and Algorithms","Object-Oriented Programming","Git and GitHub","Database Management","Problem Solving"],
+    data:["Python","SQL","Statistics","Excel","Data Visualisation","Pandas"],
+    ml:["Python","Statistics and Probability","Linear Algebra","Machine Learning","Data Preprocessing","Model Evaluation"],
+    ui:["Figma","Wireframing","Prototyping","User Research","Visual Design","Usability Testing"],
+    business:["Communication","Excel","SQL","Business Analysis","Data Interpretation","Presentation Skills"]
+};
+
+function renderGap() {
+    if (!latestResults.length) {
+        const panel = document.createElement("div");
+        panel.className = "info-panel";
+        const p = document.createElement("p");
+        p.textContent = "Complete your skill discovery assessment first. Then select a target career and analyse its skill requirements.";
+        panel.append(p);
+        $("gapResults").replaceChildren(panel);
+        return;
+    }
+    analyseGap();
+}
+
+function analyseGap() {
+    const skills = careerSkills[$("targetCareer").value];
+    const container = $("gapResults");
+    container.replaceChildren();
+
+    const card = document.createElement("div");
+    card.className = "info-panel";
+
+    const title = document.createElement("h3");
+    title.textContent = "Skills to work towards";
+
+    const para = document.createElement("p");
+    para.textContent = "These are suggested learning areas for your selected career. They are not measured against your actual technical ability.";
+
+    card.append(title, para);
+
+    skills.forEach((skill, index) => {
+        const row = document.createElement("div");
+        row.className = "result-card";
+
+        const name = document.createElement("strong");
+        name.textContent = skill;
+
+        const status = document.createElement("p");
+        status.className = "muted";
+        status.textContent = "Learning recommendation • Priority " + (index < 3 ? "High" : "Medium");
+
+        row.append(name, status);
+        card.append(row);
+    });
+
+    container.append(card);
+}
+
+$("analyseGapButton").addEventListener("click", analyseGap);
+$("targetCareer").addEventListener("change", analyseGap);
+
+/* RESUME ANALYSIS */
+
+function createReportCard(title) {
+    const card = document.createElement("div");
+    card.className = "resume-report-card";
+    const heading = document.createElement("h3");
+    heading.textContent = title;
+    card.append(heading);
+    return card;
+}
+
+function createTagList(items) {
+    const wrapper = document.createElement("div");
+
+    if (!items || !items.length) {
+        const empty = document.createElement("p");
+        empty.textContent = "No matching items detected.";
+        wrapper.append(empty);
+        return wrapper;
+    }
+
+    items.forEach(item => {
+        const tag = document.createElement("span");
+        tag.className = "tag";
+        tag.textContent = item;
+        wrapper.append(tag);
+    });
+
+    return wrapper;
+}
+
+function createBulletList(items) {
+    const list = document.createElement("ul");
+    list.className = "report-list";
+
+    (items || []).forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        list.append(li);
+    });
+
+    return list;
+}
+
+function displayResumeReport(data) {
+    const container = $("resumeResults");
+    container.replaceChildren();
+
+    const scorePanel = document.createElement("div");
+    scorePanel.className = "resume-score-panel";
+
+    const circle = document.createElement("div");
+    circle.className = "score-circle";
+
+    const score = document.createElement("strong");
+    score.textContent = data.score + "/100";
+
+    const scoreLabel = document.createElement("span");
+    scoreLabel.textContent = "RESUME SCORE";
+
+    circle.append(score, scoreLabel);
+
+    const summary = document.createElement("div");
+
+    const rating = document.createElement("h2");
+    rating.className = "resume-rating";
+    rating.textContent = data.rating;
+
+    const filename = document.createElement("p");
+    filename.className = "resume-summary";
+    filename.textContent = "File: " + data.filename;
+
+    const wordCount = document.createElement("p");
+    wordCount.className = "resume-summary";
+    wordCount.textContent = "Words detected: " + data.word_count;
+
+    const role = document.createElement("p");
+    role.className = "resume-summary";
+    role.textContent = "Target career: " + data.target_role;
+
+    summary.append(rating, filename, wordCount, role);
+    scorePanel.append(circle, summary);
+    container.append(scorePanel);
+
+    const technicalCard = createReportCard("Technical Skills Detected");
+    technicalCard.append(createTagList(data.technical_skills));
+    container.append(technicalCard);
+
+    const softCard = createReportCard("Professional and Soft Skills");
+    softCard.append(createTagList(data.soft_skills));
+    container.append(softCard);
+
+    const sectionCard = createReportCard("Resume Section Review");
+    const grid = document.createElement("div");
+    grid.className = "report-grid";
+
+    Object.entries(data.sections || {}).forEach(([name, found]) => {
+        const item = document.createElement("div");
+        item.className = "report-item";
+
+        const label = document.createElement("span");
+        label.textContent = name;
+
+        const status = document.createElement("span");
+        status.className = found ? "report-good" : "report-missing";
+        status.textContent = found ? "Included ✓" : "Not detected";
+
+        item.append(label, status);
+        grid.append(item);
+    });
+
+    sectionCard.append(grid);
+    container.append(sectionCard);
+
+    const strengthsCard = createReportCard("Your Resume Strengths");
+    strengthsCard.append(createBulletList(data.strengths));
+    container.append(strengthsCard);
+
+    const improvementsCard = createReportCard("Areas to Improve");
+    improvementsCard.append(createBulletList(data.improvements));
+    container.append(improvementsCard);
+
+    const recommendationsCard = createReportCard("Recommended Skills for Your Target Career");
+    const explanation = document.createElement("p");
+    explanation.textContent = "These skills were not detected in your resume. Consider learning or including them only if they match your actual experience.";
+    recommendationsCard.append(explanation, createTagList(data.recommended_skills));
+    container.append(recommendationsCard);
+
+    const disclaimer = document.createElement("p");
+    disclaimer.className = "note-text";
+    disclaimer.textContent = "This is an indicative, rule-based resume review. It does not guarantee interview selection or represent a professional ATS evaluation.";
+    container.append(disclaimer);
+}
+
+$("analyseResumeButton").addEventListener("click", async () => {
+    const file = $("resumeFile").files[0];
+    const container = $("resumeResults");
+    const message = $("resumeMessage");
+
+    container.replaceChildren();
+    message.textContent = "";
+
+    if (!file) {
+        message.textContent = "Please select your resume first.";
+        return;
+    }
+
+    const extension = file.name.split(".").pop().toLowerCase();
+
+    if (!["pdf", "txt"].includes(extension)) {
+        message.textContent = "Please upload a PDF or TXT file.";
+        return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+        message.textContent = "Your file is larger than 5 MB. Please upload a smaller file.";
+        return;
+    }
+
+    if (file.size === 0) {
+        message.textContent = "The selected file is empty.";
+        return;
+    }
+
+    const button = $("analyseResumeButton");
+    button.disabled = true;
+    button.textContent = "Analysing Your Resume...";
+
+    try {
+        const formData = new FormData();
+        formData.append("resume", file);
+        formData.append("target_role", $("resumeTargetRole").value);
+
+        const response = await fetch("/api/analyse-resume", {
+            method: "POST",
+            credentials: "same-origin",
+            body: formData
+        });
+
+        const data = await readApiResponse(response);
+        displayResumeReport(data);
+        message.textContent = "Resume analysis completed successfully.";
+        message.className = "resume-success";
+
+    } catch (error) {
+        console.error("Resume analysis error:", error);
+        message.className = "resume-error";
+        message.textContent = error.message || "Something went wrong while analysing your resume.";
+    } finally {
+        button.disabled = false;
+        button.textContent = "Analyse My Resume";
+    }
+});
+
+/* JOB SEARCH */
+
+$("searchJobsButton").addEventListener("click", () => {
+    const role = $("jobRole").value.trim() || "Entry Level Software Developer";
+    const location = $("jobLocation").value.trim();
+    const query = role + (location ? " " + location : "");
+    const encoded = encodeURIComponent(query);
+
+    const container = $("jobLinks");
+    container.replaceChildren();
+
+    const links = [
+        ["LinkedIn Jobs", "https://www.linkedin.com/jobs/search/?keywords=" + encoded],
+        ["Indeed", "https://in.indeed.com/jobs?q=" + encoded],
+        ["Google Jobs Search", "https://www.google.com/search?q=" + encodeURIComponent(query + " jobs")]
+    ];
+
+    links.forEach(([name, url]) => {
+        const card = document.createElement("div");
+        card.className = "result-card";
+
+        const heading = document.createElement("strong");
+        heading.textContent = name;
+
+        const link = document.createElement("a");
+        link.className = "job-link";
+        link.href = url;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = "Search opportunities ↗";
+
+        card.append(heading, link);
+        container.append(card);
+    });
+});
+
+/* RESTORE LOGIN SESSION */
+
+async function checkExistingLogin() {
+    try {
+        const response = await fetch("/api/profile", {
+            credentials: "same-origin"
+        });
+
+        if (response.status === 401) {
+            showLogin();
+            return;
+        }
+
+        const data = await readApiResponse(response);
+
+        if (data.user) {
+            showDashboard(data.user);
+        } else {
+            showLogin();
+        }
+    } catch (error) {
+        console.error("Session restore:", error);
+        showLogin();
+    }
+}
+
+checkExistingLogin();
+</script>
+</body>
+</html>
